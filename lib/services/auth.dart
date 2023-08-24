@@ -10,7 +10,8 @@ class AuthService {
   Future signInAnon() async {
     try {
       UserCredential userCredential = await _auth.signInAnonymously();
-      return _userFromFireBaseUser(userCredential);
+      User? user = userCredential.user;
+      return _userFromFireBaseUser(user);
     } catch(e) {
       print(e.toString());
       return null;
@@ -18,8 +19,13 @@ class AuthService {
   }
 
   //create custom user object based on the firebase user
-  BrewUser? _userFromFireBaseUser(UserCredential userCredential) {
-    return userCredential != null ? BrewUser(uid: userCredential.user!.uid) : null;
+  BrewUser? _userFromFireBaseUser(User? user) {
+    return user != null ? BrewUser(uid: user.uid) : null;
+  }
+
+  // auth change user stream
+  Stream<BrewUser?> get userCredential {
+    return _auth.authStateChanges().map(_userFromFireBaseUser);
   }
 
   // sign in with email & password
@@ -28,7 +34,14 @@ class AuthService {
   // register with email & password
 
   // sign out
-
+  Future signOut() async {
+    try {
+      return await _auth.signOut();
+    } catch(e) {
+      print(e.toString());
+      return null;
+    }
+  }
 
 
 
