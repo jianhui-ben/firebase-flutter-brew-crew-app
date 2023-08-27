@@ -1,18 +1,17 @@
-import 'package:firebase_flutter_brew_crew_app/screens/authenticate/sign_up.dart';
-import 'package:firebase_flutter_brew_crew_app/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_flutter_brew_crew_app/services/auth.dart';
 
-class SignIn extends StatefulWidget {
+
+class SignUp extends StatefulWidget {
 
   final Function toggleView;
-  const SignIn({super.key, required this.toggleView});
+  const SignUp({super.key, required this.toggleView});
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<SignUp> createState() => _signUpState();
 }
 
-class _SignInState extends State<SignIn> {
-  final AuthService _auth = AuthService();
+class _signUpState extends State<SignUp> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -36,7 +35,7 @@ class _SignInState extends State<SignIn> {
         appBar: AppBar(
           backgroundColor: Colors.brown[400],
           elevation: 0.0,
-          title: Text("Sign in to the brew crew"),
+          title: Text("Sign up for the brew crew"),
         ),
         body: Container(
             padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
@@ -55,7 +54,7 @@ class _SignInState extends State<SignIn> {
                   alignment: Alignment.center,
                   padding: const EdgeInsets.all(10),
                   child: const Text(
-                    'Sign in',
+                    'Sign Up',
                     style: TextStyle(fontSize: 20),
                   )),
               Container(
@@ -79,57 +78,17 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  //forgot password screen
-                },
-                child: const Text(
-                  'Forgot Password',
-                ),
-              ),
+              const SizedBox(height: 20),
               Container(
                   height: 50,
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: ElevatedButton(
-                    child: const Text('Login'),
+                    child: const Text('Sign up'),
                     onPressed: () {
                       _submitForm();
+                      widget.toggleView();
                     },
                   )),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const Text('Does not have account?'),
-                      TextButton(
-                        child: const Text(
-                          'Sign Up',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                        onPressed: () {
-                          widget.toggleView();
-                          // Navigator.pushNamed(context, SignUp());
-                          //signup screen
-                        },
-                      ),
-                    ],
-                  ),
-                  Text("or"),
-                  ElevatedButton(
-                    child: Text("Sign in anon"),
-                    onPressed: () async {
-                      dynamic result = await _auth.signInAnon();
-                      if (result == null) {
-                        print("error signing in");
-                      } else {
-                        print("user signed in");
-                        print(result);
-                      }
-                    },
-                  ),
-                ],
-              ),
             ])));
   }
 }
