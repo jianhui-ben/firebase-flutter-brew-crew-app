@@ -26,7 +26,6 @@ class _AuthenticateState extends State<Authenticate> {
     } else {
       return SignUp(toggleView: toggleView);
     }
-
   }
 }
 

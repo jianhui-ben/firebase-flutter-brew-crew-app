@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_flutter_brew_crew_app/services/auth.dart';
 
+import '../../models/user.dart';
+
 
 class SignUp extends StatefulWidget {
 
@@ -13,21 +15,32 @@ class SignUp extends StatefulWidget {
 
 class _signUpState extends State<SignUp> {
 
+  final AuthService _auth = AuthService();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final String emailErrorText = "The email can't be empty";
   final String passwordErrorText = 'The password has to be longer than 5 characters';
+  String _errorText = '';
 
-  void _submitForm() {
+
+  Future<void> _submitSignUpForm() async {
     final String email = emailController.text;
     final String password = passwordController.text;
+    print('Sign-up for the following:');
+    print("email: $email");
+    print("password: $password");
 
-    if (email.isNotEmpty && password.isNotEmpty) {
-      // Perform sign-up logic here
-      print('Sign-up successful');
-      print(emailController.text);
-      print(passwordController.text);
+    dynamic result = await _auth.registerWithEmailAndPassword(email, password);
+    if (result is! BrewUser?) {
+      setState(() {
+        _errorText = result;
+      });
+      print(_errorText);
+    } else {
+      _errorText = '';
+      print("user signed in");
+      print(result);
     }
   }
 
@@ -108,20 +121,30 @@ class _signUpState extends State<SignUp> {
                     padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: ElevatedButton(
                       child: const Text('Sign up'),
-                      onPressed: () {
+                      onPressed: () async {
                         setState(() {
                           _showEmailAndPasswordError = true; // Set the flag to show the error text
                         });
 
                         if (_formKey.currentState!.validate()) {
                           // Form is valid, perform actions here
-                          _submitForm();
-                          widget.toggleView();
+                          await _submitSignUpForm();
+                          if (_errorText.isEmpty) {
+                            widget.toggleView();
+                          }
                         }
-
                       },
                     )),
+                if (_errorText.isNotEmpty)
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      _errorText,
+                      style: TextStyle(color: Colors.red), // Customize the error text style
+                    ),
+                  ),
               ]),
+
             )));
   }
 }

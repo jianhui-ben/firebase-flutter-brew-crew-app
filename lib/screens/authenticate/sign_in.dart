@@ -29,6 +29,17 @@ class _SignInState extends State<SignIn> {
     }
   }
 
+  Future<void> _submitSignAnonForm() async {
+
+    dynamic result = await _auth.signInAnon();
+    if (result == null) {
+      print("error signing in anonymously");
+    } else {
+      print("user signed in");
+      print(result);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,13 +130,7 @@ class _SignInState extends State<SignIn> {
                   ElevatedButton(
                     child: Text("Sign in anon"),
                     onPressed: () async {
-                      dynamic result = await _auth.signInAnon();
-                      if (result == null) {
-                        print("error signing in");
-                      } else {
-                        print("user signed in");
-                        print(result);
-                      }
+                      await _submitSignAnonForm();
                     },
                   ),
                 ],
