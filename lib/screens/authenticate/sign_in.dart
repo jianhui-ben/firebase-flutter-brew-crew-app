@@ -1,5 +1,6 @@
 import 'package:firebase_flutter_brew_crew_app/screens/authenticate/sign_up.dart';
 import 'package:firebase_flutter_brew_crew_app/services/auth.dart';
+import 'package:firebase_flutter_brew_crew_app/shared/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/user.dart';
@@ -94,32 +95,33 @@ class _SignInState extends State<SignIn> {
                       }
                       return null;
                     },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
+                    decoration: textInputDecoration.copyWith(
+                      hintText: "Email / Phone number",
                       labelText: 'User Name',
-                      errorText: showEmailAndPasswordError ? emailErrorText : null,
-                      errorStyle: TextStyle(fontSize: 10),
+                      errorText:
+                          showEmailAndPasswordError ? passwordErrorText : null,
                     ),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: TextFormField(
-                    obscureText: true,
-                    controller: passwordController,
-                    validator: (value) {
-                      if (value == null || value.isEmpty || value.length < 5) {
-                        return passwordErrorText;
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Password',
-                      errorText: showEmailAndPasswordError ? passwordErrorText : null,
-                      errorStyle: TextStyle(fontSize: 10), // Adjust the font size
-                    ),
-                  ),
+                      obscureText: true,
+                      controller: passwordController,
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            value.length < 5) {
+                          return passwordErrorText;
+                        }
+                        return null;
+                      },
+                      decoration: textInputDecoration.copyWith(
+                        labelText: 'Password',
+                        errorText: showEmailAndPasswordError
+                            ? passwordErrorText
+                            : null,
+                      )),
                 ),
                 TextButton(
                   onPressed: () {
@@ -136,7 +138,8 @@ class _SignInState extends State<SignIn> {
                       child: const Text('Login'),
                       onPressed: () async {
                         setState(() {
-                          showEmailAndPasswordError = true; // Set the flag to show the error text
+                          showEmailAndPasswordError =
+                              true; // Set the flag to show the error text
                         });
 
                         if (_formKey.currentState!.validate()) {
@@ -149,7 +152,8 @@ class _SignInState extends State<SignIn> {
                     padding: const EdgeInsets.all(10),
                     child: Text(
                       _errorText,
-                      style: TextStyle(color: Colors.red), // Customize the error text style
+                      style: TextStyle(
+                          color: Colors.red), // Customize the error text style
                     ),
                   ),
                 Column(

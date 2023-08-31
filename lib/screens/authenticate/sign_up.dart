@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_flutter_brew_crew_app/services/auth.dart';
 
 import '../../models/user.dart';
+import '../../shared/constants.dart';
 
 
 class SignUp extends StatefulWidget {
-
   final Function toggleView;
+
   const SignUp({super.key, required this.toggleView});
 
   @override
@@ -14,15 +15,14 @@ class SignUp extends StatefulWidget {
 }
 
 class _signUpState extends State<SignUp> {
-
   final AuthService _auth = AuthService();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final String emailErrorText = "The email can't be empty";
-  final String passwordErrorText = 'The password has to be longer than 5 characters';
+  final String passwordErrorText =
+      'The password has to be longer than 5 characters';
   String _errorText = '';
-
 
   Future<void> signUpWithEmailAndPassword() async {
     final String email = emailController.text;
@@ -42,7 +42,6 @@ class _signUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-
     bool showEmailAndPasswordError = false;
 
     return Scaffold(
@@ -84,11 +83,10 @@ class _signUpState extends State<SignUp> {
                       }
                       return null;
                     },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
+                    decoration: textInputDecoration.copyWith(
                       labelText: 'Email',
-                      errorText: showEmailAndPasswordError ? emailErrorText : null,
-                      errorStyle: const TextStyle(fontSize: 10),
+                      errorText:
+                          showEmailAndPasswordError ? passwordErrorText : null,
                     ),
                   ),
                 ),
@@ -103,11 +101,10 @@ class _signUpState extends State<SignUp> {
                       }
                       return null;
                     },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
+                    decoration: textInputDecoration.copyWith(
                       labelText: 'Password',
-                      errorText: showEmailAndPasswordError ? passwordErrorText : null,
-                      errorStyle: const TextStyle(fontSize: 10), // Adjust the font size
+                      errorText:
+                          showEmailAndPasswordError ? passwordErrorText : null,
                     ),
                   ),
                 ),
@@ -119,7 +116,8 @@ class _signUpState extends State<SignUp> {
                       child: const Text('Sign up'),
                       onPressed: () async {
                         setState(() {
-                          showEmailAndPasswordError = true; // Set the flag to show the error text
+                          showEmailAndPasswordError =
+                              true; // Set the flag to show the error text
                         });
 
                         if (_formKey.currentState!.validate()) {
@@ -133,11 +131,11 @@ class _signUpState extends State<SignUp> {
                     padding: const EdgeInsets.all(10),
                     child: Text(
                       _errorText,
-                      style: TextStyle(color: Colors.red), // Customize the error text style
+                      style: TextStyle(
+                          color: Colors.red), // Customize the error text style
                     ),
                   ),
               ]),
-
             )));
   }
 }
