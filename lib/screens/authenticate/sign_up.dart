@@ -24,30 +24,26 @@ class _signUpState extends State<SignUp> {
   String _errorText = '';
 
 
-  Future<void> _submitSignUpForm() async {
+  Future<void> signUpWithEmailAndPassword() async {
     final String email = emailController.text;
     final String password = passwordController.text;
-    print('Sign-up for the following:');
-    print("email: $email");
-    print("password: $password");
 
     dynamic result = await _auth.registerWithEmailAndPassword(email, password);
     if (result is! BrewUser?) {
       setState(() {
         _errorText = result;
       });
-      print(_errorText);
     } else {
       _errorText = '';
-      print("user signed in");
-      print(result);
+      print("user signed up and logged in successfully");
+      print("email: $email, password: $password, userId: $result");
     }
   }
 
   @override
   Widget build(BuildContext context) {
 
-    bool _showEmailAndPasswordError = false;
+    bool showEmailAndPasswordError = false;
 
     return Scaffold(
         backgroundColor: Colors.brown[100],
@@ -91,7 +87,7 @@ class _signUpState extends State<SignUp> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Email',
-                      errorText: _showEmailAndPasswordError ? emailErrorText : null,
+                      errorText: showEmailAndPasswordError ? emailErrorText : null,
                       errorStyle: const TextStyle(fontSize: 10),
                     ),
                   ),
@@ -110,7 +106,7 @@ class _signUpState extends State<SignUp> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Password',
-                      errorText: _showEmailAndPasswordError ? passwordErrorText : null,
+                      errorText: showEmailAndPasswordError ? passwordErrorText : null,
                       errorStyle: const TextStyle(fontSize: 10), // Adjust the font size
                     ),
                   ),
@@ -123,15 +119,12 @@ class _signUpState extends State<SignUp> {
                       child: const Text('Sign up'),
                       onPressed: () async {
                         setState(() {
-                          _showEmailAndPasswordError = true; // Set the flag to show the error text
+                          showEmailAndPasswordError = true; // Set the flag to show the error text
                         });
 
                         if (_formKey.currentState!.validate()) {
                           // Form is valid, perform actions here
-                          await _submitSignUpForm();
-                          if (_errorText.isEmpty) {
-                            widget.toggleView();
-                          }
+                          await signUpWithEmailAndPassword();
                         }
                       },
                     )),

@@ -2,6 +2,8 @@ import 'package:firebase_flutter_brew_crew_app/screens/authenticate/sign_up.dart
 import 'package:firebase_flutter_brew_crew_app/services/auth.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/user.dart';
+
 class SignIn extends StatefulWidget {
 
   final Function toggleView;
@@ -16,20 +18,28 @@ class _SignInState extends State<SignIn> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final String emailErrorText = "The email can't be empty";
+  final String passwordErrorText = 'The password has to be longer than 5 characters';
+  String _errorText = '';
 
-  void _submitForm() {
+  Future<void> signInWithEmailAndPassword() async {
     final String email = emailController.text;
     final String password = passwordController.text;
 
-    if (email.isNotEmpty && password.isNotEmpty) {
-      // Perform sign-in logic here
-      print('Sign-in successful');
-      print(emailController.text);
-      print(passwordController.text);
+    dynamic result = await _auth.signInWithEmailAndPassword(email, password);
+    if (result is! BrewUser?) {
+      setState(() {
+        _errorText = result;
+      });
+    } else {
+      _errorText = '';
+      print("user signed in successfully");
+      print("email: $email, password: $password, userId: $result");
     }
   }
 
-  Future<void> _submitSignAnonForm() async {
+  Future<void> signInAnonymously() async {
 
     dynamic result = await _auth.signInAnon();
     if (result == null) {
@@ -42,6 +52,9 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+
+    bool showEmailAndPasswordError = false;
+
     return Scaffold(
         backgroundColor: Colors.brown[100],
         appBar: AppBar(
@@ -51,90 +64,123 @@ class _SignInState extends State<SignIn> {
         ),
         body: Container(
             padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-            child: ListView(children: <Widget>[
-              Container(
-                  alignment: Alignment.center,
+            child: Form(
+              key: _formKey,
+              child: ListView(children: <Widget>[
+                Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text(
+                      'Brew Crew',
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 30),
+                    )),
+                Container(
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text(
+                      'Sign in',
+                      style: TextStyle(fontSize: 20),
+                    )),
+                Container(
                   padding: const EdgeInsets.all(10),
-                  child: const Text(
-                    'Brew Crew',
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 30),
-                  )),
-              Container(
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.all(10),
-                  child: const Text(
-                    'Sign in',
-                    style: TextStyle(fontSize: 20),
-                  )),
-              Container(
-                padding: const EdgeInsets.all(10),
-                child: TextField(
-                  controller: emailController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'User Name',
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                child: TextField(
-                  obscureText: true,
-                  controller: passwordController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Password',
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  //forgot password screen
-                },
-                child: const Text(
-                  'Forgot Password',
-                ),
-              ),
-              Container(
-                  height: 50,
-                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: ElevatedButton(
-                    child: const Text('Login'),
-                    onPressed: () {
-                      _submitForm();
+                  child: TextFormField(
+                    controller: emailController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return emailErrorText;
+                      }
+                      return null;
                     },
-                  )),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const Text('Does not have account?'),
-                      TextButton(
-                        child: const Text(
-                          'Sign Up',
-                          style: TextStyle(fontSize: 12),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'User Name',
+                      errorText: showEmailAndPasswordError ? emailErrorText : null,
+                      errorStyle: TextStyle(fontSize: 10),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  child: TextFormField(
+                    obscureText: true,
+                    controller: passwordController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty || value.length < 5) {
+                        return passwordErrorText;
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Password',
+                      errorText: showEmailAndPasswordError ? passwordErrorText : null,
+                      errorStyle: TextStyle(fontSize: 10), // Adjust the font size
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    //forgot password screen
+                  },
+                  child: const Text(
+                    'Forgot Password',
+                  ),
+                ),
+                Container(
+                    height: 50,
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: ElevatedButton(
+                      child: const Text('Login'),
+                      onPressed: () async {
+                        setState(() {
+                          showEmailAndPasswordError = true; // Set the flag to show the error text
+                        });
+
+                        if (_formKey.currentState!.validate()) {
+                          await signInWithEmailAndPassword();
+                        }
+                      },
+                    )),
+                if (_errorText.isNotEmpty)
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: Text(
+                      _errorText,
+                      style: TextStyle(color: Colors.red), // Customize the error text style
+                    ),
+                  ),
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Text('Does not have account?'),
+                        TextButton(
+                          child: const Text(
+                            'Sign Up',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          onPressed: () {
+                            widget.toggleView();
+                            // Navigator.pushNamed(context, SignUp());
+                            //signup screen
+                          },
                         ),
-                        onPressed: () {
-                          widget.toggleView();
-                          // Navigator.pushNamed(context, SignUp());
-                          //signup screen
-                        },
-                      ),
-                    ],
-                  ),
-                  Text("or"),
-                  ElevatedButton(
-                    child: Text("Sign in anon"),
-                    onPressed: () async {
-                      await _submitSignAnonForm();
-                    },
-                  ),
-                ],
-              ),
-            ])));
+                      ],
+                    ),
+                    Text("or"),
+                    ElevatedButton(
+                      child: Text("Sign in anon"),
+                      onPressed: () async {
+                        await signInAnonymously();
+                      },
+                    ),
+                  ],
+                ),
+              ]),
+            )));
   }
 }
