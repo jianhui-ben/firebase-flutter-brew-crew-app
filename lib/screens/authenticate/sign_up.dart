@@ -3,6 +3,7 @@ import 'package:firebase_flutter_brew_crew_app/services/auth.dart';
 
 import '../../models/user.dart';
 import '../../shared/constants.dart';
+import '../../shared/loading.dart';
 
 
 class SignUp extends StatefulWidget {
@@ -23,6 +24,7 @@ class _signUpState extends State<SignUp> {
   final String passwordErrorText =
       'The password has to be longer than 5 characters';
   String _errorText = '';
+  bool loading = false;
 
   Future<void> signUpWithEmailAndPassword() async {
     final String email = emailController.text;
@@ -44,7 +46,7 @@ class _signUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     bool showEmailAndPasswordError = false;
 
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
         backgroundColor: Colors.brown[100],
         appBar: AppBar(
           backgroundColor: Colors.brown[400],
@@ -121,8 +123,9 @@ class _signUpState extends State<SignUp> {
                         });
 
                         if (_formKey.currentState!.validate()) {
-                          // Form is valid, perform actions here
+                          setState(() {loading = true;});
                           await signUpWithEmailAndPassword();
+                          setState(() {loading = false;});
                         }
                       },
                     )),

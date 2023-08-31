@@ -4,6 +4,7 @@ import 'package:firebase_flutter_brew_crew_app/shared/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/user.dart';
+import '../../shared/loading.dart';
 
 class SignIn extends StatefulWidget {
 
@@ -23,6 +24,7 @@ class _SignInState extends State<SignIn> {
   final String emailErrorText = "The email can't be empty";
   final String passwordErrorText = 'The password has to be longer than 5 characters';
   String _errorText = '';
+  bool loading = false;
 
   Future<void> signInWithEmailAndPassword() async {
     final String email = emailController.text;
@@ -56,7 +58,7 @@ class _SignInState extends State<SignIn> {
 
     bool showEmailAndPasswordError = false;
 
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
         backgroundColor: Colors.brown[100],
         appBar: AppBar(
           backgroundColor: Colors.brown[400],
@@ -143,7 +145,9 @@ class _SignInState extends State<SignIn> {
                         });
 
                         if (_formKey.currentState!.validate()) {
+                          setState(() {loading = true;});
                           await signInWithEmailAndPassword();
+                          setState(() {loading = false;});
                         }
                       },
                     )),
@@ -168,9 +172,8 @@ class _SignInState extends State<SignIn> {
                             style: TextStyle(fontSize: 12),
                           ),
                           onPressed: () {
+                            // go to the sign up screen
                             widget.toggleView();
-                            // Navigator.pushNamed(context, SignUp());
-                            //signup screen
                           },
                         ),
                       ],
@@ -179,7 +182,9 @@ class _SignInState extends State<SignIn> {
                     ElevatedButton(
                       child: Text("Sign in anon"),
                       onPressed: () async {
+                        setState(() {loading = true;});
                         await signInAnonymously();
+                        setState(() {loading = false;});
                       },
                     ),
                   ],
