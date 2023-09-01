@@ -184,6 +184,7 @@ class _SignInState extends State<SignIn> {
                       onPressed: () async {
                         setState(() {loading = true;});
                         await signInAnonymously();
+                        if (!mounted) return;
                         setState(() {loading = false;});
                       },
                     ),

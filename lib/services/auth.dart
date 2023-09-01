@@ -6,6 +6,7 @@ import 'package:firebase_flutter_brew_crew_app/models/user.dart';
 class AuthService {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   // sign in anon
   Future signInAnon() async {
     try {

@@ -13,7 +13,6 @@ class Wrapper extends StatelessWidget {
 
     //check the brewUser stream
     final userCredential = Provider.of<BrewUser?>(context);
-    // print(userCredential);
 
     //return either Home or Authenticate widget
     if (userCredential == null) {
