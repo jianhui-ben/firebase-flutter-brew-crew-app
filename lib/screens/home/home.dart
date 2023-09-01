@@ -15,7 +15,7 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
-        title: Text("Brew Cruew Home screen"),
+        title: Text("Brew Crew Home screen"),
         actions: <Widget>[
           TextButton(
             onPressed: () async {

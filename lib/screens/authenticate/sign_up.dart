@@ -125,6 +125,7 @@ class _signUpState extends State<SignUp> {
                         if (_formKey.currentState!.validate()) {
                           setState(() {loading = true;});
                           await signUpWithEmailAndPassword();
+                          if (!mounted) return;
                           setState(() {loading = false;});
                         }
                       },
@@ -134,7 +135,7 @@ class _signUpState extends State<SignUp> {
                     padding: const EdgeInsets.all(10),
                     child: Text(
                       _errorText,
-                      style: TextStyle(
+                      style: const TextStyle(
                           color: Colors.red), // Customize the error text style
                     ),
                   ),
