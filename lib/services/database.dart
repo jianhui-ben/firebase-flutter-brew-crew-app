@@ -39,9 +39,9 @@ class DatabaseService {
           in querySnapshot.docs) {
         // Convert data from the document to Brew
         brewStream.add(Brew(
-            name: document["name"],
-            strength: document["strength"],
-            sugars: document["sugars"]));
+            name: document["name"] ?? "",
+            strength: document["strength"] ?? 0,
+            sugars: document["sugars"] ?? "0"));
       }
       return brewStream;
     });

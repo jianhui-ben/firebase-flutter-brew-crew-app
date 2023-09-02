@@ -44,16 +44,10 @@ class Home extends StatelessWidget {
           ],
         ),
         body: Container(
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           child: Column(
             children: [
-              ElevatedButton(
-                child: Text("Sign out"),
-                onPressed: () async {
-                  await _auth.signOut();
-                },
-              ),
-              BrewList()
+              BrewList()!
             ],
           ),
         ),

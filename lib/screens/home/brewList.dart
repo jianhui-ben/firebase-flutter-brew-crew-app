@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/brew.dart';
+import 'brewTile.dart';
 
 class BrewList extends StatefulWidget {
   const BrewList({super.key});
@@ -19,12 +20,16 @@ class _BrewListState extends State<BrewList> {
 
     //check the brew stream
     final brewStream = Provider.of<List<Brew?>?>(context)!;
-    for (Brew? brewData in brewStream!) {
-      print(brewData);
-    }
+    // for (Brew? brewData in brewStream) {
+    //   print(brewData);
+    // }
 
-    // for ()brewStreamSnapshot.docs
-
-    return SafeArea(child: Text("brew list placeholder"));
+    return Expanded(
+      child: ListView.builder(
+          itemCount: brewStream.length,
+          itemBuilder: (context, index) {
+            return BrewTile(brew : brewStream[index]);
+      }),
+    );
   }
 }
