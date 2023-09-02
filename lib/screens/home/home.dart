@@ -1,5 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_flutter_brew_crew_app/screens/home/brewList.dart';
+import 'package:firebase_flutter_brew_crew_app/screens/home/settings_form.dart';
 import 'package:firebase_flutter_brew_crew_app/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +19,7 @@ class Home extends StatelessWidget {
       showModalBottomSheet(context: context, builder: (context) {
         return Container(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-            child: Text("bottom sheet"));
+            child: SettingsForm());
       });
     }
 
@@ -31,7 +31,7 @@ class Home extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.brown[400],
           elevation: 0.0,
-          title: Text("Brew Crew Home screen"),
+          title: Text("Brew Crew"),
           actions: <Widget>[
             TextButton(
               onPressed: () async {
