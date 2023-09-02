@@ -20,7 +20,7 @@ class _SignInState extends State<SignIn> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final String emailErrorText = "The email can't be empty";
   final String passwordErrorText = 'The password has to be longer than 5 characters';
   String _errorText = '';

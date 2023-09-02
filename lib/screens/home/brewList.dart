@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_flutter_brew_crew_app/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,10 +20,12 @@ class _BrewListState extends State<BrewList> {
   Widget build(BuildContext context) {
 
     //check the brew stream
-    final brewStream = Provider.of<List<Brew?>?>(context)!;
-    // for (Brew? brewData in brewStream) {
-    //   print(brewData);
-    // }
+    final brewStream = Provider.of<List<Brew?>?>(context);
+
+    if (brewStream == null) {
+      // Handle the case where brewStream is null, e.g., show a loading indicator or an error message.
+      return const Loading(); // You can replace this with an appropriate widget.
+    }
 
     return Expanded(
       child: ListView.builder(
