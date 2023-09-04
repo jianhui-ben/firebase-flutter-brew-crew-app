@@ -70,13 +70,9 @@ class _SettingsFormState extends State<SettingsForm> {
                   child: Text("$sugar sugars"),
                 );
               }).toList(),
-              validator: (value) {
-                return sugars.contains(value)
-                    ? null
-                    : "Please enter a sugar";
-              },
               decoration: textInputDecoration.copyWith(
-                  labelText: 'Sugar level', errorText: "Please select a valid sugar"),
+                  labelText: 'Sugar level',
+              ),
             ),
 
             const SizedBox(
@@ -88,15 +84,17 @@ class _SettingsFormState extends State<SettingsForm> {
               children: <Widget>[
                 SliderTheme(
                   data: SliderTheme.of(context).copyWith(
-                    activeTrackColor: Colors.brown[_curStrength!],
+                    activeTrackColor: Colors.brown[_curStrength ?? 100],
                     inactiveTrackColor: Colors.grey,
                     trackHeight: 4.0,
-                    thumbColor: Colors.brown[_curStrength!],
+                    thumbColor: Colors.brown[_curStrength ?? 100],
                     thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
                     overlayShape: RoundSliderOverlayShape(overlayRadius: 20.0),
                   ),
                   child: Slider(
                     value: (_curStrength ?? 100).toDouble() ,
+                    activeColor: Colors.brown[_curStrength ?? 100],
+                    inactiveColor: Colors.brown[_curStrength ?? 100],
                     min: 100.0,
                     max: 900.0,
                     divisions: 8,
@@ -108,7 +106,7 @@ class _SettingsFormState extends State<SettingsForm> {
                   ),
                 ),
                 Text(
-                  'Selected Number: ${_curStrength?.toStringAsFixed(0)}',
+                  'Selected Number: ${(_curStrength ?? 100).toStringAsFixed(0)}',
                   style: TextStyle(fontSize: 15),
                 ),
               ],
