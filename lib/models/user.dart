@@ -1,3 +1,6 @@
+// mainly used for authentification
+import 'brew.dart';
+
 class BrewUser {
   final String uid;
 
@@ -7,4 +10,18 @@ class BrewUser {
   String toString() {
     return "uid: $uid";
   }
+}
+
+//used to store the brew data
+class BrewUserData {
+  final String uid;
+  final Brew brew;
+
+  BrewUserData({required this.uid, required this.brew});
+
+  @override
+  String toString() {
+    return "uid: $uid, brew data: $brew";
+  }
+
 }

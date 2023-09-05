@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_flutter_brew_crew_app/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
