@@ -78,7 +78,14 @@ class Home extends StatelessWidget {
         ),
         body: Container(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-          child: Column(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/coffee-home-background.jpg"),
+              // image: AssetImage("assets/coffee-bean-avatar.jpeg"),
+              fit: BoxFit.cover,
+            ),
+          ),
+            child: Column(
             children: [
               BrewList(),
             ],
