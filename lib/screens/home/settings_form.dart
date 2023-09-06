@@ -1,3 +1,4 @@
+import 'package:firebase_flutter_brew_crew_app/models/brew.dart';
 import 'package:firebase_flutter_brew_crew_app/shared/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_flutter_brew_crew_app/shared/constants.dart';
@@ -19,9 +20,6 @@ class _SettingsFormState extends State<SettingsForm> {
   String? _curName;
   String? _curSugars;
   int? _curStrength;
-
-
-  double _currentSliderValue = 20;
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +65,10 @@ class _SettingsFormState extends State<SettingsForm> {
                     },
                     decoration: textInputDecoration.copyWith(
                         labelText: 'Name',
-                        errorText: _formKey.currentState == null || _formKey.currentState!.validate() ? null : "Please enter a valid name"
-                    ),
+                        errorText: _formKey.currentState == null ||
+                                _formKey.currentState!.validate()
+                            ? null
+                            : "Please enter a valid name"),
                   ),
                   const SizedBox(
                     height: 20,
@@ -101,23 +101,31 @@ class _SettingsFormState extends State<SettingsForm> {
                     children: <Widget>[
                       SliderTheme(
                         data: SliderTheme.of(context).copyWith(
-                          activeTrackColor: Colors.brown[_curStrength ?? snapShotStrength],
+                          activeTrackColor:
+                              Colors.brown[_curStrength ?? snapShotStrength],
                           inactiveTrackColor: Colors.grey,
                           trackHeight: 4.0,
-                          thumbColor: Colors.brown[_curStrength ?? snapShotStrength],
-                          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.0),
-                          overlayShape: RoundSliderOverlayShape(overlayRadius: 20.0),
+                          thumbColor:
+                              Colors.brown[_curStrength ?? snapShotStrength],
+                          thumbShape:
+                              RoundSliderThumbShape(enabledThumbRadius: 12.0),
+                          overlayShape:
+                              RoundSliderOverlayShape(overlayRadius: 20.0),
                         ),
                         child: Slider(
-                          value: (_curStrength  ?? snapShotStrength).toDouble() ,
-                          activeColor: Colors.brown[_curStrength ?? snapShotStrength],
-                          inactiveColor: Colors.brown[_curStrength  ?? snapShotStrength],
+                          value:
+                              (_curStrength ?? snapShotStrength).toDouble(),
+                          activeColor:
+                              Colors.brown[_curStrength ?? snapShotStrength],
+                          inactiveColor:
+                              Colors.brown[_curStrength ?? snapShotStrength],
                           min: 100.0,
                           max: 900.0,
                           divisions: 8,
                           onChanged: (value) {
                             setState(() {
-                              _curStrength = value.round(); // Update selected number
+                              _curStrength =
+                                  value.round(); // Update selected number
                             });
                           },
                         ),
@@ -136,22 +144,26 @@ class _SettingsFormState extends State<SettingsForm> {
                   ),
 
                   OutlinedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       // Respond to button press
-
-
-                      print("name: $_curName, sugar: $_curSugars, strength: $_curStrength");
-
-                      // await DatabaseService(uid: ).removeUserData();
+                      if (_formKey.currentState!.validate()) {
+                        await DatabaseService(uid: userCredential!.uid)
+                            .updateUserBrew(Brew(
+                            name: _curName ?? snapShotName,
+                            strength: _curStrength ?? snapShotStrength,
+                            sugars: _curSugars ?? snapShotSugars));
+                        Navigator.pop(context);
+                      }
                     },
                     child: Text(
                       "Update",
-                      style: TextStyle(fontSize: 20, color: Colors.brown[400]),
+                      style:
+                          TextStyle(fontSize: 20, color: Colors.brown[400]),
                     ),
                   )
                 ],
               ));
-        } else {
+          } else {
           return Loading();
         }
       }
