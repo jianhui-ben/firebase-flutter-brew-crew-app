@@ -15,12 +15,13 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     // reason why this is inside the build method is because we need access to context
     void _showSettingPanels() {
-
-      showModalBottomSheet(context: context, builder: (context) {
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
-            child: SettingsForm());
-      });
+      showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return Container(
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 50),
+                child: SettingsForm());
+          });
     }
 
     return StreamProvider<List<Brew?>?>.value(
